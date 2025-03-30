@@ -46,21 +46,10 @@ void Game::DrawGame()
     groundShape.setPosition(0, 95);
     wnd->draw(groundShape);
 
-    // Dibujar las paredes
-    sf::RectangleShape leftWallShape(sf::Vector2f(10, alto)); // Alto de la ventana
-    leftWallShape.setFillColor(sf::Color::Blue);
-    leftWallShape.setPosition(100, 0); // X = 100 para que comience donde termina el suelo
-    wnd->draw(leftWallShape);
-
-    sf::RectangleShape rightWallShape(sf::Vector2f(10, alto)); // Alto de la ventana
-    rightWallShape.setFillColor(sf::Color::Cyan);
-    rightWallShape.setPosition(90, 0); // X = 90 para que comience donde termina el suelo
-    wnd->draw(rightWallShape);
-
-    // Dibujar el cuerpo de control (círculo)
-    sf::CircleShape controlShape(5);
-    controlShape.setFillColor(sf::Color::Magenta);
-    controlShape.setPosition(controlBody->GetPosition().x - 5, controlBody->GetPosition().y - 5);
+    // Dibujar el cuerpo de caida (bloque)
+    sf::RectangleShape controlShape(sf::Vector2f(20, 10));
+    controlShape.setFillColor(sf::Color::Green);
+    controlShape.setPosition(controlBody->GetPosition().x - 10, controlBody->GetPosition().y - 5);
     wnd->draw(controlShape);
 }
 
@@ -75,28 +64,8 @@ void Game::DoEvents()
         case Event::Closed:
             wnd->close(); // Cerrar la ventana si se presiona el botón de cerrar
             break;
-        case Event::MouseButtonPressed:
-            // Crear un cuerpo dinámico triangular en la posición del ratón
-            b2Body* body = Box2DHelper::CreateTriangularDynamicBody(phyWorld, b2Vec2(0.0f, 0.0f), 10.0f, 1.0f, 4.0f, 0.1f);
-            // Transformar las coordenadas según la vista activa
-            Vector2f pos = wnd->mapPixelToCoords(Vector2i(evt.mouseButton.x, evt.mouseButton.y));
-            body->SetTransform(b2Vec2(pos.x, pos.y), 0.0f);
-            break;
         }
     }
-
-    // Controlar el movimiento del cuerpo de control con el teclado
-    // Segun la numeracion usada, cuando mas cerca de cero mas 
-    // lento es el desplazamiento sobre ese eje
-    controlBody->SetAwake(true);
-    if (Keyboard::isKeyPressed(Keyboard::Left))
-        controlBody->SetLinearVelocity(b2Vec2(-30.0f, 0.0f));
-    if (Keyboard::isKeyPressed(Keyboard::Right))
-        controlBody->SetLinearVelocity(b2Vec2(30.0f, 0.0f));
-    if (Keyboard::isKeyPressed(Keyboard::Down))
-        controlBody->SetLinearVelocity(b2Vec2(0.0f, 30.0f));
-    if (Keyboard::isKeyPressed(Keyboard::Up))
-        controlBody->SetLinearVelocity(b2Vec2(0.0f, -30.0f));
 }
 
 // Comprobación de colisiones (a implementar más adelante)
@@ -126,18 +95,12 @@ void Game::InitPhysics()
     debugRender->SetFlags(UINT_MAX);
     phyWorld->SetDebugDraw(debugRender);
 
-    // Crear el suelo y las paredes estáticas del mundo físico
+    // Crear el suelo estático del mundo fisico
     b2Body* groundBody = Box2DHelper::CreateRectangularStaticBody(phyWorld, 100, 10);
     groundBody->SetTransform(b2Vec2(50.0f, 100.0f), 0.0f);
 
-    b2Body* leftWallBody = Box2DHelper::CreateRectangularStaticBody(phyWorld, 10, 100);
-    leftWallBody->SetTransform(b2Vec2(0.0f, 50.0f), 0.0f);
-
-    b2Body* rightWallBody = Box2DHelper::CreateRectangularStaticBody(phyWorld, 10, 100);
-    rightWallBody->SetTransform(b2Vec2(100.0f, 50.0f), 0.0f);
-
-    // Crear un círculo que se controlará con el teclado
-    controlBody = Box2DHelper::CreateCircularDynamicBody(phyWorld, 5, 1.0f, 0.5, 0.1f);
+    // Crear un bloque
+    controlBody = Box2DHelper::CreateRectangularDynamicBody(phyWorld, 20, 10, 1.0f, 0.5, 0.2f);
     controlBody->SetTransform(b2Vec2(50.0f, 50.0f), 0.0f);
 }
 

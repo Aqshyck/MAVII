@@ -3,7 +3,7 @@
 
 using namespace sf; // Espacio de nombres para la biblioteca SFML
 
-class Pelota
+class Bloque
 {
 private:
     // Sprite y su imagen para representación gráfica
@@ -14,13 +14,13 @@ private:
     b2Body* _body;
 
 public:
-    // Constructor de la clase Pelota
-    Pelota(b2World* _world, RenderWindow* _wnd)
+    // Constructor de la clase Bloque
+    Bloque(b2World* _world, RenderWindow* _wnd)
     {
         // Guardamos un puntero a la ventana para dibujar luego
         wnd = _wnd;
         _image = new Texture();
-        _image->loadFromFile("Pelota.png"); // Carga la textura de la pelota
+        _image->loadFromFile("Bloque.png"); // Carga la textura del bloque
         // Cargamos el sprite
         _sprite = new Sprite(*_image);
 
@@ -30,9 +30,9 @@ public:
         bodyDef.position.Set(100.0f, 0.0f);
         _body = _world->CreateBody(&bodyDef);
 
-        // Creamos su figura de colisión (en este caso, una caja cuadrada)
+        // Creamos su figura de colisión (en este caso, un rectangulo)
         b2PolygonShape dynamicBox;
-        dynamicBox.SetAsBox(20.0f, 20.0f);
+        dynamicBox.SetAsBox(20.0f, 10.0f);
 
         // Creamos el fixture, le asignamos la figura de colisión y lo agregamos al cuerpo
         b2FixtureDef fixtureDef;
