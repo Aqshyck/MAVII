@@ -26,7 +26,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Src\Box2dEmptyApp.cpp">
+    <ClCompile Include="..\Src\Ejercicio 2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Src\Game.cpp">
