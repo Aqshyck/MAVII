@@ -41,9 +41,11 @@ void Game::UpdatePhysics()
 void Game::DrawGame()
 {
     // Dibujar el suelo
-    sf::RectangleShape groundShape(sf::Vector2f(500, 5));
+    sf::RectangleShape groundShape(sf::Vector2f(500, 10));
     groundShape.setFillColor(sf::Color::Red);
-    groundShape.setPosition(0, 95);
+    groundShape.setPosition(30, 50);
+    groundShape.setOrigin(250, 5);
+    groundShape.setRotation(30);
     wnd->draw(groundShape);
 
     // Dibujar las paredes
@@ -57,10 +59,16 @@ void Game::DrawGame()
     rightWallShape.setPosition(90, 0); // X = 90 para que comience donde termina el suelo
     wnd->draw(rightWallShape);
 
-    // Dibujar el cuerpo de control (círculo)
-    sf::CircleShape controlShape(5);
+    // Dibujar el cuerpo de control (caja)
+    sf::RectangleShape controlShape(sf::Vector2f(10, 5));
     controlShape.setFillColor(sf::Color::Magenta);
-    controlShape.setPosition(controlBody->GetPosition().x - 5, controlBody->GetPosition().y - 5);
+    controlShape.setOrigin(5, 2.5);    
+    b2Vec2 pos = controlBody->GetPosition();
+    float angulo = controlBody->GetAngle();
+    controlShape.setPosition(pos.x, pos.y);
+    controlShape.setRotation(angulo * 180.0f / b2_pi);
+    
+   
     wnd->draw(controlShape);
 }
 
@@ -127,8 +135,8 @@ void Game::InitPhysics()
     phyWorld->SetDebugDraw(debugRender);
 
     // Crear el suelo y las paredes estáticas del mundo físico
-    b2Body* groundBody = Box2DHelper::CreateRectangularStaticBody(phyWorld, 100, 10);
-    groundBody->SetTransform(b2Vec2(50.0f, 100.0f), 0.0f);
+    b2Body* groundBody = Box2DHelper::CreateRectangularStaticBody(phyWorld, 200, 10);
+    groundBody->SetTransform(b2Vec2(30.0f, 50.0f), 0.5236f);
 
     b2Body* leftWallBody = Box2DHelper::CreateRectangularStaticBody(phyWorld, 10, 100);
     leftWallBody->SetTransform(b2Vec2(0.0f, 50.0f), 0.0f);
@@ -136,8 +144,8 @@ void Game::InitPhysics()
     b2Body* rightWallBody = Box2DHelper::CreateRectangularStaticBody(phyWorld, 10, 100);
     rightWallBody->SetTransform(b2Vec2(100.0f, 50.0f), 0.0f);
 
-    // Crear un círculo que se controlará con el teclado
-    controlBody = Box2DHelper::CreateCircularDynamicBody(phyWorld, 5, 1.0f, 0.5, 0.1f);
+    // Crear una caja que se controlará con el teclado
+    controlBody = Box2DHelper::CreateRectangularDynamicBody(phyWorld, 10, 5, 1.0f, 0, 0.1f);
     controlBody->SetTransform(b2Vec2(50.0f, 50.0f), 0.0f);
 }
 
