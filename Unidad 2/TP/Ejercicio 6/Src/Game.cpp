@@ -58,15 +58,19 @@ void Game::DrawGame()
     wnd->draw(rightWallShape);
 
     // Dibujar el cuerpo de control (círculo)
-    sf::CircleShape controlShape(5);
+    sf::RectangleShape controlShape(sf::Vector2f(15, 8));
     controlShape.setFillColor(sf::Color::Magenta);
-    controlShape.setPosition(controlBody->GetPosition().x - 5, controlBody->GetPosition().y - 5);
+    controlShape.setOrigin(7.5, 4);
+    controlShape.setPosition(controlBody->GetPosition().x, controlBody->GetPosition().y);
+    float angle = controlBody->GetAngle();
+    controlShape.setRotation(angle * 180.0f / b2_pi);
     wnd->draw(controlShape);
 }
 
 // Procesamiento de eventos de entrada
 void Game::DoEvents()
 {
+    float angulo= controlBody->GetAngle();
     Event evt;
     while (wnd->pollEvent(evt))
     {
@@ -76,11 +80,13 @@ void Game::DoEvents()
             wnd->close(); // Cerrar la ventana si se presiona el botón de cerrar
             break;
         case Event::MouseButtonPressed:
-            // Crear un cuerpo dinámico triangular en la posición del ratón
-            b2Body* body = Box2DHelper::CreateTriangularDynamicBody(phyWorld, b2Vec2(0.0f, 0.0f), 10.0f, 1.0f, 4.0f, 0.1f);
+            // Crear un cuerpo dinámico circular en la posición del cañion
+            Vector2f punta (controlBody->GetPosition().x, controlBody->GetPosition().y);
+            b2Body* body = Box2DHelper::CreateCircularDynamicBody(phyWorld, 5, 10.0f, 1.0f, 4.0f);
             // Transformar las coordenadas según la vista activa
-            Vector2f pos = wnd->mapPixelToCoords(Vector2i(evt.mouseButton.x, evt.mouseButton.y));
-            body->SetTransform(b2Vec2(pos.x, pos.y), 0.0f);
+            body->SetTransform(b2Vec2(punta.x+8, (punta.y +( angulo * 180/ b2_pi)/5)), angulo);
+            body->SetLinearVelocity(b2Vec2(50.0f, (angulo * 180 / b2_pi)));
+
             break;
         }
     }
@@ -89,14 +95,20 @@ void Game::DoEvents()
     // Segun la numeracion usada, cuando mas cerca de cero mas 
     // lento es el desplazamiento sobre ese eje
     controlBody->SetAwake(true);
-    if (Keyboard::isKeyPressed(Keyboard::Left))
-        controlBody->SetLinearVelocity(b2Vec2(-30.0f, 0.0f));
-    if (Keyboard::isKeyPressed(Keyboard::Right))
-        controlBody->SetLinearVelocity(b2Vec2(30.0f, 0.0f));
     if (Keyboard::isKeyPressed(Keyboard::Down))
-        controlBody->SetLinearVelocity(b2Vec2(0.0f, 30.0f));
+        if (angulo < 1)
+        {
+            angulo = controlBody->GetAngle();
+            angulo = angulo + 0.03;
+        }        
+        controlBody->SetTransform(b2Vec2(5.0f, 50.0f),angulo);
     if (Keyboard::isKeyPressed(Keyboard::Up))
-        controlBody->SetLinearVelocity(b2Vec2(0.0f, -30.0f));
+        if (angulo > - 1)
+        {
+            angulo = controlBody->GetAngle();
+            angulo = angulo - 0.03;
+        }        
+        controlBody->SetTransform(b2Vec2(5.0f, 50.0f), angulo);
 }
 
 // Comprobación de colisiones (a implementar más adelante)
@@ -136,9 +148,9 @@ void Game::InitPhysics()
     b2Body* rightWallBody = Box2DHelper::CreateRectangularStaticBody(phyWorld, 10, 100);
     rightWallBody->SetTransform(b2Vec2(100.0f, 50.0f), 0.0f);
 
-    // Crear un círculo que se controlará con el teclado
-    controlBody = Box2DHelper::CreateCircularDynamicBody(phyWorld, 5, 1.0f, 0.5, 0.1f);
-    controlBody->SetTransform(b2Vec2(50.0f, 50.0f), 0.0f);
+    // Crear un cañon que se controlará con el teclado
+    controlBody = Box2DHelper::CreateRectangularStaticBody(phyWorld, 15, 8);
+    controlBody->SetTransform(b2Vec2(5.0f, 50.0f), 0.0f);
 }
 
 // Destructor de la clase
