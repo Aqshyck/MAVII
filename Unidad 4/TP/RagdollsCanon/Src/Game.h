@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "SFMLRenderer.h"
-#include "Avatar.h"
+#include "Cannon.h"
 #include "Ragdoll.h"
+#include "RagdollManager.h"
 #include <list>
 
 using namespace sf;
@@ -25,14 +26,14 @@ private:
 	int fps;
 
 	// Cuerpo de box2d
+	Cannon* _cannon;
+	RagdollManager* _ragdollManager;
 	b2Body* controlBody;
-	Ragdoll* toy;
 
 public:
 	//Constructores, destructores e inicializadores
 	Game(int ancho, int alto, std::string titulo);
 	void CheckCollitions();
-	void CreateEnemy(int x, int y);
 	~Game(void);
 	void InitPhysics();
 

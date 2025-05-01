@@ -21,12 +21,14 @@
   <ItemGroup>
     <ClInclude Include="..\Src\Box2DHelper.h" />
     <ClInclude Include="..\Src\Game.h" />
-    <ClInclude Include="..\Src\Avatar.h" />
+    <ClInclude Include="..\Src\Cannon.h" />
     <ClInclude Include="..\Src\Ragdoll.h" />
+    <ClInclude Include="..\Src\RagdollManager.h" />
     <ClInclude Include="..\Src\SFMLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Src\RagdollsCanon.cpp">
+    <ClCompile Include="..\Src\RagdollManager.cpp" />
+    <ClCompile Include="..\Src\RagdollsCannon.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -38,7 +40,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Src\Avatar.cpp" />
+    <ClCompile Include="..\Src\Cannon.cpp" />
     <ClCompile Include="..\Src\Ragdoll.cpp" />
     <ClCompile Include="..\Src\SFMLRenderer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -52,7 +54,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Box2dEmptyApp</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>RagdollsCanon</ProjectName>
+    <ProjectName>RagdollsCannon</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

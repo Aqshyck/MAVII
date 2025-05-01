@@ -59,8 +59,8 @@ void Game::DrawGame()
 	topWallShape.setPosition(50, 0);
 	wnd->draw(topWallShape);
 
-	toy->Actualizar();
-	toy->Dibujar(*wnd);
+	_cannon ->update(*wnd);
+	_cannon->render(*wnd);
 }
 
 void Game::DoEvents()
@@ -74,11 +74,12 @@ void Game::DoEvents()
 			wnd->close(); // Cierra la ventana
 			break;
 		case Event::MouseButtonPressed: // Si se presiona un botón del ratón
-			// Crea un cuerpo dinámico con forma triangular en la posición del clic
+			/*// Crea un cuerpo dinámico con forma triangular en la posición del clic
 			b2Body* body = Box2DHelper::CreateTriangularDynamicBody(phyWorld, b2Vec2(0.0f, 0.0f), 10.0f, 1.0f, 4.0f, 0.1f);
 			Vector2f pos = wnd->mapPixelToCoords(Vector2i(evt.mouseButton.x, evt.mouseButton.y)); // Transforma la posición del clic a coordenadas del mundo
 			body->SetTransform(b2Vec2(pos.x, pos.y), 0.0f); // Mueve el cuerpo a la posición del clic
-			break;
+			break;*/
+			_cannon->handleInput(*_ragdollManager);
 		}
 	}
 }
@@ -119,8 +120,9 @@ void Game::InitPhysics()
 	b2Body* topWallBody = Box2DHelper::CreateRectangularStaticBody(phyWorld, 100, 10);
 	topWallBody->SetTransform(b2Vec2(50.0f, 0.0f), 0.0f);
 
-	// Crea un ragdoll
-	toy = new Ragdoll(phyWorld,b2Vec2(50.0f,50.0f));
+	// Crea el Cañon
+	_cannon = new Cannon(*phyWorld);
+	_ragdollManager = new RagdollManager(*phyWorld);
 }
 
 Game::~Game(void)
